@@ -1,0 +1,20 @@
+{
+  "name": "landing_qooxdoo",
+  "version": "1.0.0",
+  "description": "Digital Software Corporation Landing Page",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "compile": "qx compile",
+    "serve": "qx serve",
+    "watch": "qx watch",
+    "dev": "qx serve"
+  },
+  "devDependencies": {
+    "@qooxdoo/compiler": "^1.0.5",
+    "@qooxdoo/framework": "^6.0.4"
+  },
+  "dependencies": {
+    "xlsx": "https://cdn.sheetjs.com/xlsx-latest/xlsx-latest.tgz"
+  }
+}
