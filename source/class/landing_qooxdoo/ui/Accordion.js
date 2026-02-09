@@ -33,6 +33,7 @@ qx.Class.define("landing_qooxdoo.ui.Accordion", {
     this._html.addListenerOnce("appear", () => {
       this._render();
       this._attachOneOpenBehavior();
+      this._attachToggleScrollBehavior();
     }, this);
   },
 
@@ -132,6 +133,32 @@ qx.Class.define("landing_qooxdoo.ui.Accordion", {
             el.removeAttribute("open");
           }
         });
+      });
+    },
+
+    /**
+     * When an accordion item is opened, update height and scroll it into view so bottom items fit.
+     */
+    _attachToggleScrollBehavior() {
+      const section = this._getSectionElement();
+      if (!section) return;
+      section.addEventListener("toggle", (event) => {
+        const details = event.target;
+        if (details.tagName !== "DETAILS") return;
+        const accordion = this;
+        setTimeout(() => {
+          accordion._scheduleUpdateHeight();
+          if (details.open) {
+            setTimeout(() => {
+              if (accordion.isDisposed()) return;
+              try {
+                details.scrollIntoView({ block: "end", behavior: "auto" });
+              } catch (e) {
+                details.scrollIntoView(false);
+              }
+            }, 30);
+          }
+        }, 0);
       });
     }
   }

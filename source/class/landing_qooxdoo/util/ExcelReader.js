@@ -177,26 +177,100 @@ qx.Class.define("landing_qooxdoo.util.ExcelReader", {
           return null;
         }
 
-        const { Info, FAQ = [], Download = [], Brochure = [] } = data.sheets;
+        const { Info, FAQ = [], Download = [], Brochure = [], ReleaseNotes = [] } = data.sheets;
         const info = Info.find((p) => p.Code === code.toUpperCase());
         if (!info) {
           return null;
         }
 
+        const codeUpper = code.toUpperCase();
+        const productReleaseNotes = (ReleaseNotes || []).filter(
+          (row) => (row.Code || "").toString().toUpperCase() === codeUpper
+        );
+        const release_notes = productReleaseNotes.length === 0
+          ? null
+          : productReleaseNotes
+              .map((r) => {
+                const v = r.Version != null ? String(r.Version) : "";
+                const d = r.Date != null ? String(r.Date) : "";
+                const n = r.Notes != null ? String(r.Notes) : "";
+                if (v || d) return (v && d ? `Version ${v} (${d}): ` : v ? `Version ${v}: ` : `(${d}): `) + n;
+                return n;
+              })
+              .join("\n\n");
+
         return {
           title: `${info.Title} (${info.Code})`,
           description: info.Short,
           href: `/products/${info.Code}`,
-          faq: FAQ.filter((faq) => faq.Code === code.toUpperCase()).map((f) => f.FAQ),
-          download: Download.filter((dl) => dl.Code === code.toUpperCase()).map((dl) => ({
+          faq: FAQ.filter((faq) => faq.Code === codeUpper).map((f) => f.FAQ),
+          download: Download.filter((dl) => dl.Code === codeUpper).map((dl) => ({
             version: dl.Version,
             link: dl.Link
           })),
-          brochure: Brochure.filter((br) => br.Code === code.toUpperCase()).map((br) => ({
+          brochure: Brochure.filter((br) => br.Code === codeUpper).map((br) => ({
             title: br.Title,
             link: br.Link
-          }))
+          })),
+          release_notes
         };
+      });
+    },
+
+    /**
+     * Get all release notes from products.xlsx (sheet "ReleaseNotes").
+     * Expected columns: Code, Version, Date, Notes.
+     * @return {qx.Promise} Promise that resolves with array of { code, version, date, notes }
+     */
+    getReleaseNotes() {
+      const resourceManager = qx.util.ResourceManager.getInstance();
+      const excelPath = resourceManager.toUri("landing_qooxdoo/data/products.xlsx");
+      return this.readExcel(excelPath).then((data) => {
+        const raw = data.sheets.ReleaseNotes;
+        if (!raw || !Array.isArray(raw) || raw.length === 0) {
+          return [];
+        }
+        return raw.map((row) => ({
+          code: row.Code != null ? String(row.Code).trim() : "",
+          version: row.Version != null ? String(row.Version).trim() : "",
+          date: row.Date != null ? String(row.Date).trim() : "",
+          notes: row.Notes != null ? String(row.Notes).trim() : ""
+        })).filter((r) => r.notes !== "" || r.version !== "" || r.code !== "");
+      });
+    },
+
+    /**
+     * Get changelog text for a product from public/downloads/{code}-changelog.txt (same as React app).
+     * @param {String} code - Product code (e.g. SIAS, CARES)
+     * @return {qx.Promise<String|null>} Promise that resolves with file content or null if not found/failed
+     */
+    getChangelogContent(code) {
+      if (!code) return qx.Promise.resolve(null);
+      const resourceManager = qx.util.ResourceManager.getInstance();
+      const url = resourceManager.toUri("landing_qooxdoo/downloads/" + String(code).toLowerCase() + "-changelog.txt");
+      return new qx.Promise((resolve) => {
+        fetch(url)
+          .then((r) => (r.ok ? r.text() : Promise.reject(new Error(r.status))))
+          .then((text) => resolve(text != null && text.trim() !== "" ? text : null))
+          .catch(() => resolve(null));
+      });
+    },
+
+    /**
+     * Get release notes from changelog files in public/downloads (like the React app).
+     * Returns one entry per product that has a {code}-changelog.txt file.
+     * @return {qx.Promise} Promise that resolves with array of { code, title, content }
+     */
+    getReleaseNotesFromChangelogs() {
+      return this.getAllProducts().then((products) => {
+        const promises = products.map((p) =>
+          this.getChangelogContent(p.code).then((content) =>
+            content != null ? { code: p.code, title: p.title, content } : null
+          )
+        );
+        return qx.Promise.all(promises).then((results) =>
+          results.filter((r) => r != null)
+        );
       });
     }
   }

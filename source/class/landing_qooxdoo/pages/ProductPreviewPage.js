@@ -173,7 +173,8 @@ qx.Class.define("landing_qooxdoo.pages.ProductPreviewPage", {
       downloadSection.add(this._versionComboContainer);
       mainContent.add(downloadSection);
 
-      // Release Notes section (16px via theme)
+      // Release Notes section: orange label + single large scrollable dark panel (product page layout)
+      if (releaseSection.getContentElement()) releaseSection.getContentElement().addClass("product-release-notes-section");
       const releaseTitle = new landing_qooxdoo.ui.Label("RELEASE NOTES");
       releaseTitle.setFont("bold");
       if (releaseTitle.getContentElement()) releaseTitle.getContentElement().addClass("product-section-title");
@@ -181,8 +182,10 @@ qx.Class.define("landing_qooxdoo.pages.ProductPreviewPage", {
 
       this._releaseNotesArea = new landing_qooxdoo.ui.TextArea("Release notes will be listed here when available.");
       this._releaseNotesArea.setWrap(true);
-      this._releaseNotesArea.setMinHeight(200);
+      this._releaseNotesArea.setMinHeight(320);
+      this._releaseNotesArea.setMaxHeight(420);
       this._releaseNotesArea.setEnabled(false);
+      if (this._releaseNotesArea.getContentElement()) this._releaseNotesArea.getContentElement().addClass("release-notes-textarea-wrap");
       releaseSection.add(this._releaseNotesArea);
       mainContent.add(releaseSection);
 
@@ -262,6 +265,10 @@ qx.Class.define("landing_qooxdoo.pages.ProductPreviewPage", {
 
           if (product.release_notes) {
             this._releaseNotesArea.setValue(product.release_notes);
+          } else {
+            landing_qooxdoo.util.ExcelReader.getChangelogContent(this._productCode).then((content) => {
+              if (content) this._releaseNotesArea.setValue(content);
+            });
           }
 
           this._brochureContainer.removeAll();

@@ -233,6 +233,9 @@
   .block {
     display: block;
   }
+  .contents {
+    display: contents;
+  }
   .flex {
     display: flex;
   }
@@ -337,8 +340,15 @@
   .text-muted-foreground {
     color: var(--muted-foreground);
   }
+  .uppercase {
+    text-transform: uppercase;
+  }
   .italic {
     font-style: italic;
+  }
+  .ordinal {
+    --tw-ordinal: ordinal;
+    font-variant-numeric: var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,);
   }
   .underline {
     text-decoration-line: underline;
@@ -3746,6 +3756,119 @@ body {
   box-shadow: var(--shadow);
   box-sizing: border-box;
 }
+.release-note-card {
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-xs);
+  padding: 14px 18px;
+  box-sizing: border-box;
+}
+.release-note-card .release-note-header .label {
+  color: var(--primary);
+  font-size: 15px;
+}
+.release-note-card .release-note-body .label {
+  color: var(--foreground);
+  line-height: 1.45;
+}
+.release-note-card .release-note-changelog-body {
+  white-space: pre-wrap;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.release-notes-section {
+  background-color: #2c3e50;
+  color: #f1c40f;
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  box-sizing: border-box;
+  min-height: 200px;
+}
+.release-notes-section .release-notes-title .label, .release-notes-section .release-notes-title {
+  font-size: 16px !important;
+  margin-bottom: 4px;
+}
+.release-notes-textarea-wrap {
+  background-color: #34495e !important;
+  border-radius: var(--radius);
+  overflow: auto;
+}
+.release-notes-textarea-wrap textarea, .release-notes-section textarea.textarea {
+  background-color: #34495e !important;
+  color: #ecf0f1 !important;
+  border: none !important;
+  padding: 12px !important;
+  font-family: var(--font-mono) !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  white-space: pre-wrap !important;
+  min-height: 360px !important;
+}
+.product-release-notes-section {
+  border-radius: var(--radius);
+  padding: 0;
+  padding-bottom: 4px;
+  box-sizing: border-box;
+}
+.product-release-notes-section .product-section-title .label, .product-release-notes-section .product-section-title {
+  color: var(--primary) !important;
+  margin-bottom: 8px;
+}
+.product-release-notes-section .release-notes-textarea-wrap {
+  background-color: #2b3a4f !important;
+  border-radius: var(--radius);
+  overflow: hidden;
+  min-height: 320px;
+  max-height: 420px;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.product-release-notes-section .release-notes-textarea-wrap textarea, .product-release-notes-section textarea.textarea {
+  background-color: #2b3a4f !important;
+  color: #ecf0f1 !important;
+  border: none !important;
+  padding: 14px 16px !important;
+  font-family: var(--font-mono) !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  white-space: pre-wrap !important;
+  min-height: 280px !important;
+  max-height: 400px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  resize: none !important;
+}
+.release-notes-page .release-notes-page-title .label, .release-notes-page .release-notes-page-title {
+  color: var(--primary) !important;
+  font-size: 1.75rem !important;
+  line-height: 1.2;
+}
+.release-notes-page .release-notes-page-subtitle .label, .release-notes-page .release-notes-page-subtitle {
+  color: #2c3e50 !important;
+  font-size: 0.95rem !important;
+}
+.dark .release-notes-page .release-notes-page-subtitle .label, .dark .release-notes-page .release-notes-page-subtitle {
+  color: var(--muted-foreground) !important;
+}
+.release-notes-accordion-wrap .accordion-content-section {
+  background-color: #2b3a4f !important;
+  border-radius: var(--radius);
+  padding: 12px 16px !important;
+}
+.release-notes-accordion-wrap .accordion-content-body {
+  background-color: #2b3a4f !important;
+  color: #f1c40f !important;
+  font-family: var(--font-mono) !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  white-space: pre-wrap !important;
+  max-height: min(60vh, 400px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
 .menubar-theme {
   background-color: var(--background);
   color: var(--foreground);
@@ -3781,6 +3904,9 @@ body {
 }
 .product-preview-page .product-breadcrumb, .product-preview-page .product-breadcrumb .label, .product-preview-page .product-breadcrumb label, .product-preview-page .product-title, .product-preview-page .product-title .label, .product-preview-page .product-title label, .product-preview-page .product-section-title, .product-preview-page .product-section-title .label, .product-preview-page .product-section-title label {
   font-size: 16px !important;
+}
+.product-preview-page .product-section-title, .product-preview-page .product-section-title .label, .product-preview-page .product-section-title label {
+  color: var(--primary) !important;
 }
 .product-preview-page .product-breadcrumb-link, .product-preview-page .product-breadcrumb-link .label, .product-preview-page .product-breadcrumb-link label {
   text-decoration: underline !important;
@@ -3819,6 +3945,16 @@ body {
 .list-of-clients-page, .list-of-clients-page .qx-scroll-pane, .list-of-clients-page .qx-scroll-content {
   background-color: var(--background) !important;
   color: var(--foreground) !important;
+}
+.release-notes-page, .release-notes-page .qx-scroll-pane, .release-notes-page .qx-scroll-content {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+.release-notes-page .release-notes-accordion-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
 }
 .clients-page-title, .clients-page-title .label, .clients-page-title label {
   color: var(--primary) !important;
@@ -4152,6 +4288,26 @@ body {
   syntax: "*";
   inherits: false;
 }
+@property --tw-ordinal {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-slashed-zero {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-figure {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-spacing {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-fraction {
+  syntax: "*";
+  inherits: false;
+}
 @property --tw-blur {
   syntax: "*";
   inherits: false;
@@ -4324,6 +4480,11 @@ body {
       --tw-skew-y: initial;
       --tw-border-style: solid;
       --tw-font-weight: initial;
+      --tw-ordinal: initial;
+      --tw-slashed-zero: initial;
+      --tw-numeric-figure: initial;
+      --tw-numeric-spacing: initial;
+      --tw-numeric-fraction: initial;
       --tw-blur: initial;
       --tw-brightness: initial;
       --tw-contrast: initial;
